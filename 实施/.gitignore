@@ -1,0 +1,16 @@
+# 机密
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# 临时输出
+outputs/*.tmp
+outputs/*.draft.md
+
+# 系统
+.DS_Store

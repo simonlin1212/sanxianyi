@@ -1,0 +1,62 @@
+# ============= Secrets / 敏感信息 =============
+.env
+**/.env
+*.env.local
+*.env.*.local
+!.env.example
+!**/.env.example
+
+# ============= Python =============
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.venv/
+venv/
+env/
+
+# ============= Node / Frontend =============
+node_modules/
+.npm/
+.yarn/
+package-lock.json
+yarn.lock
+
+# ============= IDE =============
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ============= OS =============
+.DS_Store
+Thumbs.db
+desktop.ini
+.Spotlight-V100
+.Trashes
+
+# ============= Project-specific =============
+# 调试级 yaml（占位过大）
+**/outputs/*.debug.yaml
+
+# Claude Code 个人配置
+.claude/
+
+# 临时文件
+*.tmp
+*.log
+/tmp/
+
+# 三人语料原始下载（第三方 GitHub 仓库 dump，版权原因不上传）
+三人语料/曾国藩/
+三人语料/苏轼/
+三人语料/王阳明/
+
+# 资料目录（调研用的第三方仓库 dump）
+资料/

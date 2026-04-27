@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="三贤议 — 让曾国藩、苏轼、王阳明，为你的困境真实辩论 2 轮">
+  <title>三贤议 · 职场三人共议</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@400;700;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <link rel="stylesheet" href="css/custom.css">
+  <script src="js/data.js"></script>
+</head>
+
+<body x-data="app()" x-init="init()" class="min-h-screen">
+
+<nav class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-black/60 border-b border-zinc-800">
+  <div class="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+    <button @click="goto('hero')" class="flex items-center gap-3 group">
+      <div class="seal seal-sm group-hover:rotate-[-5deg] transition">三</div>
+      <span class="font-display font-bold tracking-wider text-lg">三贤议</span>
+    </button>
+    <div class="flex items-center gap-6 text-sm text-zinc-400">
+      <button @click="goto('hero')" :class="view === 'hero' ? 'text-mod' : ''" class="hover:text-zinc-100 transition font-mono uppercase tracking-widest">Home</button>
+      <button @click="goto('input')" :class="view === 'input' ? 'text-mod' : ''" class="hover:text-zinc-100 transition font-mono uppercase tracking-widest">Ask</button>
+      <span class="hidden md:inline font-mono text-xs text-zinc-600">v0.1</span>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section x-show="view === 'hero'" x-transition.opacity.duration.500ms class="hero-bg pt-28 pb-20">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-20 mt-12">
+      <p class="font-mono text-xs uppercase tracking-[0.5em] text-zinc-500 mb-6">A Debate Of Three Sages · For Your Career</p>
+      <h1 class="hero-title mb-8">三贤议</h1>
+      <p class="hero-subtitle">让<span class="text-zeng mx-1">曾国藩</span>·<span class="text-su mx-1">苏轼</span>·<span class="text-wang mx-1">王阳明</span>，为你的职场困境真实辩论两轮</p>
+
+      <div class="grid md:grid-cols-3 gap-8 md:gap-10 mt-16 mb-20 max-w-5xl mx-auto">
+        <div class="text-center">
+          <div class="seal seal-lg seal-zeng mx-auto">曾</div>
+          <p class="mt-4 font-display text-xl font-bold">曾国藩</p>
+          <p class="mt-1 text-xs text-zinc-500 tracking-wider">笃行 · 日课 · 慎独</p>
+          <p class="mt-5 text-sm text-zinc-300 leading-relaxed font-display">「天下之至拙，能胜天下之至巧」</p>
+          <p class="mt-2 text-xs text-zinc-500 leading-relaxed">给你笨功夫的尺子，问你下了多少。</p>
+        </div>
+        <div class="text-center">
+          <div class="seal seal-lg seal-su mx-auto">苏</div>
+          <p class="mt-4 font-display text-xl font-bold">苏轼</p>
+          <p class="mt-1 text-xs text-zinc-500 tracking-wider">安住 · 旷达 · 此心安处是吾乡</p>
+          <p class="mt-5 text-sm text-zinc-300 leading-relaxed font-display">「此心安处是吾乡」</p>
+          <p class="mt-2 text-xs text-zinc-500 leading-relaxed">三贬黄惠儋的人，不会让你假装"想开了"。</p>
+        </div>
+        <div class="text-center">
+          <div class="seal seal-lg seal-wang mx-auto">王</div>
+          <p class="mt-4 font-display text-xl font-bold">王阳明</p>
+          <p class="mt-1 text-xs text-zinc-500 tracking-wider">致良知 · 知行合一 · 破心中贼</p>
+          <p class="mt-5 text-sm text-zinc-300 leading-relaxed font-display">「破心中贼难」</p>
+          <p class="mt-2 text-xs text-zinc-500 leading-relaxed">一面镜子，照出你藏在"两难"里不敢承认的事。</p>
+        </div>
+      </div>
+
+      <button @click="goto('input')" class="group inline-flex items-center gap-3 px-8 py-4 bg-zinc-100 text-zinc-900 rounded-full font-display font-bold text-lg hover:bg-white transition shadow-2xl">
+        <span>说说你的困境</span>
+        <span class="group-hover:translate-x-1 transition">→</span>
+      </button>
+      <p class="mt-4 font-mono text-xs text-zinc-600 tracking-wider">或先看下面 4 个真实案例</p>
+    </div>
+
+    <div class="mb-12">
+      <div class="flex items-end justify-between mb-8">
+        <div>
+          <p class="font-mono text-xs uppercase tracking-widest text-zinc-500 mb-2">Real Cases</p>
+          <h2 class="font-display text-3xl md:text-4xl font-bold">真实辩论实录</h2>
+        </div>
+        <p class="text-sm text-zinc-500 hidden md:block">点击卡片直接看三家结论 · 含可展开的二轮对辩</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6">
+        <template x-for="(c, idx) in CASES" :key="c.id">
+          <div class="case-card reveal" @click="loadCase(idx); goto('synthesis')">
+            <div class="flex items-start gap-4">
+              <div class="font-mono text-xs text-zinc-600 mt-1" x-text="String(idx+1).padStart(2,'0')"></div>
+              <div class="flex-1">
+                <div class="flex items-center gap-3 mb-3 flex-wrap">
+                  <span class="font-display text-xl font-bold" x-text="c.title"></span>
+                  <span x-show="c.intent === 'listen'" class="font-mono text-[10px] uppercase tracking-widest text-su border border-zinc-700 rounded-full px-2 py-0.5">Listen Mode</span>
+                  <span x-show="c.intent === 'decision'" class="font-mono text-[10px] uppercase tracking-widest text-wang border border-zinc-700 rounded-full px-2 py-0.5">Decision</span>
+                  <span x-show="c.intent === 'advice'" class="font-mono text-[10px] uppercase tracking-widest text-mod border border-zinc-700 rounded-full px-2 py-0.5">Advice</span>
+                </div>
+                <p class="text-sm text-zinc-400 leading-relaxed mb-4" x-text="c.summary"></p>
+                <div class="flex items-center gap-2 text-xs text-zinc-600 font-mono">
+                  <span x-text="c.listen_mode ? '苏轼主导 + 曾/王 各 1 句' : `三家结论 · 含 ${c.debate?.round1.length + c.debate?.round2.length || 0} 条交锋（可展开）`"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+    </div>
+
+    <div class="mt-24 text-center max-w-3xl mx-auto">
+      <p class="text-zinc-500 text-sm leading-relaxed">三家观点不调和，留下真实分歧让你自己取舍 · 不予定论，只示照见。</p>
+    </div>
+  </div>
+</section>
+
+<!-- INPUT -->
+<section x-show="view === 'input'" x-transition.opacity.duration.500ms class="pt-32 pb-20 min-h-screen flex items-center">
+  <div class="max-w-3xl mx-auto px-6 w-full">
+    <p class="font-mono text-xs uppercase tracking-[0.4em] text-zinc-500 mb-4 text-center">Tell Three Sages Your Trouble</p>
+    <h2 class="font-display text-3xl md:text-5xl font-bold text-center mb-4">说说你的困境</h2>
+    <p class="text-center text-zinc-500 mb-12">信息越具体，辩论越精彩 · 推荐 100-300 字</p>
+
+    <textarea
+      x-model="userInput"
+      rows="10"
+      placeholder="比如：30 岁产品经理，月薪 25k，最近收到一家创业公司 offer，给我 40k + 期权。但我老婆怀孕了，希望我稳定。我感觉大厂明年要裁员，又怕创业公司一年就倒。一周内必须答复，已经睡不好两个礼拜了。"
+      class="w-full bg-zinc-900 border border-zinc-700 rounded-2xl p-6 text-base leading-relaxed font-display focus:outline-none focus:border-zinc-400 transition resize-none"
+    ></textarea>
+
+    <div class="flex items-center justify-between mt-6 flex-wrap gap-4">
+      <p class="font-mono text-xs text-zinc-600 tracking-wider" x-text="`${userInput.length} 字`"></p>
+      <button @click="submitLive()" class="px-8 py-3 bg-zinc-100 text-zinc-900 rounded-full font-display font-bold hover:bg-white transition disabled:opacity-30" :disabled="userInput.length < 20 || isLiveRunning">
+        <span x-show="!isLiveRunning">送给三人评议 →</span>
+        <span x-show="isLiveRunning">辩论中...</span>
+      </button>
+    </div>
+
+    <div x-show="liveError" x-transition class="mt-12 p-6 border border-red-900 rounded-xl bg-red-950/30">
+      <p class="font-mono text-xs uppercase tracking-widest text-red-400 mb-3">Error</p>
+      <p class="text-sm text-zinc-400 leading-relaxed mb-2" x-text="liveError"></p>
+      <p class="text-xs text-zinc-500 leading-relaxed mb-4">后端可能未启动或 LLM 异常。可以先看预生成案例：</p>
+      <button @click="loadCase(0); goto('synthesis')" class="text-sm text-mod hover:text-zinc-100 transition font-display font-bold">查看「跨城跳槽 vs 父母老婆」三家结论 →</button>
+    </div>
+
+    <p class="mt-8 text-center text-xs text-zinc-600 font-mono">提交后三人会真实辩论 2 轮，约 3-6 分钟 · 请耐心等待</p>
+  </div>
+</section>
+
+<!-- LIVE 辩论进行中（对话流式 feed）-->
+<section x-show="view === 'live'" x-transition.opacity.duration.500ms class="pt-24 pb-20 min-h-screen">
+  <div class="max-w-3xl mx-auto px-6 w-full">
+
+    <!-- 顶部：标题 + 3 印章小头像 -->
+    <div class="text-center mb-8">
+      <p class="font-mono text-xs uppercase tracking-[0.4em] text-mod mb-3">Three Sages In Session</p>
+      <h2 class="font-display text-2xl md:text-3xl font-bold mb-6">三家共议中</h2>
+      <div class="flex justify-center gap-6">
+        <template x-for="p in ['曾国藩', '苏轼', '王阳明']" :key="p">
+          <div class="text-center">
+            <div :class="`seal ${liveActiveSpeaker === p ? 'pulse' : ''} seal-${ {'曾国藩':'zeng', '苏轼':'su', '王阳明':'wang'}[p] }`"
+                 style="width: 3.5rem; height: 3.5rem; font-size: 1.4rem;"
+                 :style="`opacity: ${liveActiveSpeaker === p ? 1 : 0.5}; transition: opacity .4s;`"
+                 x-text="PERSONAS[p].seal"></div>
+          </div>
+        </template>
+      </div>
+    </div>
+
+    <!-- 用户原话引用（顶部 collapsed）-->
+    <div class="mb-6 border-l-2 border-zinc-800 pl-3 py-1">
+      <p class="font-mono text-[10px] uppercase tracking-widest text-zinc-500 mb-1">User</p>
+      <p class="text-xs text-zinc-500 leading-relaxed" x-text="userInput"></p>
+    </div>
+
+    <!-- 对话 feed -->
+    <div class="conversation-feed" x-ref="feed">
+      <template x-for="(msg, i) in conversationFeed" :key="i">
+        <div class="msg" :class="`msg-${msg.kind} msg-persona-${ {'曾国藩':'zeng', '苏轼':'su', '王阳明':'wang'}[msg.persona] }`">
+          <div :class="`seal seal-sm seal-${ {'曾国藩':'zeng', '苏轼':'su', '王阳明':'wang'}[msg.persona] }`" x-text="PERSONAS[msg.persona].seal"></div>
+          <div class="msg-body">
+            <div class="msg-meta">
+              <span class="msg-name" x-text="msg.persona"></span>
+              <template x-if="msg.target">
+                <span class="msg-target" x-text="'@ ' + msg.target"></span>
+              </template>
+              <template x-if="msg.kindLabel">
+                <span class="msg-kind" x-text="msg.kindLabel"></span>
+              </template>
+            </div>
+            <div class="msg-content"
+                 :style="`border-left: 3px solid ${ msg.kind === 'rebuttal' ? '#d4a85a' : ({'曾国藩':'#6a8aaa','苏轼':'#95b27e','王阳明':'#d96666'})[msg.persona] }`"
+                 x-text="msg.text"></div>
+          </div>
+        </div>
+      </template>
+
+      <!-- 当前 stage 提示（feed 末尾跟随）-->
+      <div x-show="isLiveRunning && conversationFeed.length > 0" class="msg msg-status">
+        <div class="msg-status-dot"></div>
+        <div class="msg-body">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-zinc-500" x-text="liveStageName"></p>
+          <p class="text-xs text-zinc-400 mt-1" x-text="liveStageMsg"></p>
+        </div>
+      </div>
+
+      <!-- 初始等待（feed 还为空时）-->
+      <div x-show="conversationFeed.length === 0 && isLiveRunning" class="text-center py-12 text-zinc-500">
+        <p class="font-mono text-xs uppercase tracking-widest mb-3" x-text="liveStageName || 'WAITING'"></p>
+        <p class="font-display text-lg" x-text="liveStageMsg || '正在召集三位...'"></p>
+      </div>
+    </div>
+
+    <!-- 底部状态条 -->
+    <div class="mt-6 flex items-center justify-between flex-wrap gap-3 text-xs text-zinc-600 font-mono">
+      <span x-text="`已用 ${liveElapsed}s · ${liveStagesCompleted}/${liveStagesTotal} 阶段`"></span>
+      <button @click="cancelLive()" class="uppercase tracking-widest hover:text-zinc-100 transition">取消</button>
+    </div>
+
+    <div class="progress-track mt-2">
+      <template x-for="i in liveStagesTotal" :key="i">
+        <div class="progress-step" :class="i <= liveStagesCompleted ? 'done' : (i === liveStagesCompleted + 1 ? 'active' : '')"></div>
+      </template>
+    </div>
+  </div>
+</section>
+
+<!-- DEBATE -->
+<section x-show="view === 'debate'" x-transition.opacity.duration.500ms class="pt-24 pb-20 min-h-screen">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="mb-8">
+      <div class="flex items-start justify-between flex-wrap gap-4 mb-6">
+        <div>
+          <p class="font-mono text-xs uppercase tracking-widest text-zinc-500 mb-2">Now Debating</p>
+          <h2 class="font-display text-2xl md:text-3xl font-bold" x-text="currentCase?.title || '...'"></h2>
+        </div>
+        <div class="flex gap-2">
+          <button @click="restartDebate()" class="font-mono text-xs uppercase tracking-widest text-zinc-500 hover:text-zinc-100 border border-zinc-800 rounded-full px-4 py-2 transition">重播</button>
+          <button @click="skipToSynthesis()" class="font-mono text-xs uppercase tracking-widest text-zinc-500 hover:text-zinc-100 border border-zinc-800 rounded-full px-4 py-2 transition">跳到结尾 →</button>
+        </div>
+      </div>
+
+      <div class="border-l-4 border-zinc-700 pl-4 py-2 mb-6">
+        <p class="font-mono text-xs uppercase tracking-widest text-zinc-500 mb-2">User</p>
+        <p class="text-zinc-300 leading-relaxed" x-text="currentCase?.user_input"></p>
+      </div>
+
+      <div class="progress-track">
+        <template x-for="(label, i) in progressLabels" :key="i">
+          <div class="progress-step" :class="i < progress ? 'done' : (i === progress ? 'active' : '')"></div>
+        </template>
+      </div>
+      <div class="flex justify-between mt-2 font-mono text-[10px] uppercase tracking-widest text-zinc-600">
+        <template x-for="(label, i) in progressLabels" :key="i">
+          <span :class="i === progress ? 'text-mod' : ''" x-text="label"></span>
+        </template>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-[180px_1fr] gap-8">
+      <aside class="md:sticky md:top-32 md:self-start">
+        <div class="flex md:flex-col gap-4 md:gap-6 justify-center">
+          <template x-for="p in ['曾国藩', '苏轼', '王阳明']" :key="p">
+            <div class="text-center">
+              <div :class="`seal ${activeSpeaker === p ? 'pulse' : ''} seal-${ {'曾国藩':'zeng', '苏轼':'su', '王阳明':'wang'}[p] }`"
+                   :style="`opacity: ${activeSpeaker === p ? 1 : 0.4}; transition: opacity .3s;`"
+                   x-text="PERSONAS[p].seal"></div>
+              <p class="mt-3 font-display font-bold text-sm" x-text="p"></p>
+              <p class="mt-1 text-[10px] text-zinc-600 tracking-wider hidden md:block" x-text="PERSONAS[p].subtitle"></p>
+            </div>
+          </template>
+        </div>
+      </aside>
+
+      <div class="space-y-8">
+        <div x-show="progress >= 0">
+          <p class="font-mono text-xs uppercase tracking-widest text-zinc-500 mb-4">Round 0 · First Opinion · 三人首发</p>
+          <template x-for="(op, i) in displayedOpinions" :key="i">
+            <div :class="`opinion-card ${ {'曾国藩':'zeng', '苏轼':'su', '王阳明':'wang'}[op.persona] }`">
+              <div class="flex items-center gap-3 mb-3">
+                <div :class="`seal seal-sm seal-${ {'曾国藩':'zeng', '苏轼':'su', '王阳明':'wang'}[op.persona] }`" x-text="PERSONAS[op.persona].seal"></div>
+                <div>
+                  <p class="font-display font-bold" x-text="op.persona"></p>
+                  <p class="text-xs text-zinc-500" x-text="op.signature || ''"></p>
+                </div>
+              </div>
+              <p x-show="op.stance" class="font-display font-bold text-lg leading-relaxed mb-3" x-text="op.stance"></p>
+              <p class="text-zinc-300 leading-relaxed" :class="i === currentOpinionIdx ? 'typing-cursor' : ''" x-text="op._typed || ''"></p>
+              <div x-show="op.poem && op._done" class="quote-block">
+                <span x-text="op.poem?.text"></span>
+                <span class="quote-source" x-text="`—— ${op.poem?.source}`"></span>
+              </div>
+              <div x-show="op.references && op._done" class="mt-3 text-xs text-zinc-500 font-mono">
+                <template x-for="r in (op.references || [])" :key="r.source">
+                  <span class="block mt-1" x-text="`「${r.quote}」 ${r.source}`"></span>
+                </template>
+              </div>
+              <div x-show="op.mirror_question && op._done" class="mt-4 p-3 bg-red-950/40 border-l-2 border-wang rounded text-wang font-display italic" x-text="`「${op.mirror_question}」`"></div>
+            </div>
+          </template>
+        </div>
+
+        <template x-for="(round, ri) in displayedRounds" :key="ri">
+          <div>
+            <p class="font-mono text-xs uppercase tracking-widest text-zinc-500 mb-4" x-text="`Round ${ri+1} · Rebuttal & Reply · 第 ${['一','二'][ri]} 轮交锋`"></p>
+            <div class="bg-zinc-900/40 border border-zinc-800 rounded-xl p-6">
+              <template x-for="(row, i) in round" :key="i">
+                <div class="debate-row">
+                  <div class="debate-arrow" x-text="`${row.speaker.slice(0,1)} → ${row.target.slice(0,1)}`"></div>
+                  <div class="debate-bubble">
+                    <p :class="`text-${ {'曾国藩':'zeng', '苏轼':'su', '王阳明':'wang'}[row.speaker] }`">
+                      <span x-text="row._rebuttalTyped || ''"></span>
+                      <span x-show="row._rebuttalTyping" class="typing-cursor"></span>
+                    </p>
+                    <p x-show="row._replyTyped" class="reply">
+                      <span class="font-mono text-xs mr-1" x-text="`${row.target.slice(0,1)} →`"></span>
+                      <span x-text="row._replyTyped || ''"></span>
+                      <span x-show="row._replyTyping" class="typing-cursor"></span>
+                      <span x-show="row._done && row.standpoint === 'yielded'" class="standpoint-yielded">YIELDED</span>
+                      <span x-show="row._done && row.standpoint === 'held'" class="standpoint-held">HELD</span>
+                    </p>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </div>
+        </template>
+
+        <div x-show="!isPlaying && progress >= progressLabels.length - 1" x-transition class="text-center mt-12">
+          <button @click="goto('synthesis')" class="px-8 py-3 bg-zinc-100 text-zinc-900 rounded-full font-display font-bold hover:bg-white transition">
+            看主持人综合 →
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SYNTHESIS -->
+<section x-show="view === 'synthesis'" x-transition.opacity.duration.500ms class="pt-24 pb-20">
+  <div class="max-w-4xl mx-auto px-6">
+    <div class="text-center mb-12">
+      <p class="font-mono text-xs uppercase tracking-[0.4em] text-zinc-500 mb-4">Moderator Synthesis</p>
+      <h2 class="font-display text-3xl md:text-4xl font-bold mb-3">主持人综合</h2>
+      <p class="text-sm text-zinc-500" x-text="currentCase?.title"></p>
+    </div>
+
+    <div class="mb-16">
+      <p class="font-mono text-xs uppercase tracking-widest text-zinc-500 mb-4">Three Voices</p>
+      <template x-for="op in (currentCase?.opinions || [])" :key="op.persona">
+        <div :class="`opinion-card ${ {'曾国藩':'zeng', '苏轼':'su', '王阳明':'wang'}[op.persona] }`">
+          <div class="flex items-center gap-3 mb-3">
+            <div :class="`seal seal-sm seal-${ {'曾国藩':'zeng', '苏轼':'su', '王阳明':'wang'}[op.persona] }`" x-text="PERSONAS[op.persona].seal"></div>
+            <div>
+              <p class="font-display font-bold" x-text="op.persona"></p>
+              <p class="text-xs text-zinc-500" x-text="op.signature || ''"></p>
+            </div>
+          </div>
+          <p x-show="op.stance" class="font-display font-bold text-lg mb-3" x-text="op.stance"></p>
+          <p class="text-zinc-300 leading-relaxed" x-text="op.text"></p>
+        </div>
+      </template>
+    </div>
+
+    <!-- 主持人完整综合（live 模式直接渲染 markdown）-->
+    <div x-show="currentCase?.moderator_markdown" class="mb-16 prose-invert">
+      <p class="font-mono text-xs uppercase tracking-widest text-mod mb-4" x-text="currentCase?.is_followup ? 'Three Sages Asking Back · 三贤追问' : `Moderator's Full Synthesis`"></p>
+      <div class="border border-mod/20 rounded-xl p-8 bg-zinc-900/30 leading-relaxed text-zinc-200" x-html="renderMarkdown(currentCase?.moderator_markdown)"></div>
+
+      <!-- 追问区（追问回答 / 基于结果再追问 双用途）-->
+      <div x-show="currentCase?.moderator_markdown && !currentCase?.listen_mode" class="mt-6 p-6 border border-zinc-800 rounded-xl bg-zinc-900/40">
+        <p class="font-mono text-xs uppercase tracking-widest text-zinc-500 mb-3" x-text="currentCase?.is_followup ? 'Continue · 继续回答' : 'Ask Again · 基于上面再追问'"></p>
+        <textarea x-model="followupReply" rows="4" :placeholder="currentCase?.is_followup ? '把追问的事补充一下，多少都行...' : '想继续追问什么？比如换个角度、加新条件、追问某个细节...'" class="w-full bg-zinc-950 border border-zinc-700 rounded-lg p-4 text-sm leading-relaxed font-display focus:outline-none focus:border-zinc-400 transition resize-none"></textarea>
+        <div class="flex items-center justify-between mt-4 flex-wrap gap-3">
+          <p class="font-mono text-[10px] text-zinc-600 tracking-wider" x-text="`${followupReply.length} 字 · ${ currentCase?.is_followup ? '提交后将带原困境一起重新跑' : '提交后会带上一轮辩论摘要再跑一轮' }`"></p>
+          <button @click="submitFollowup()" :disabled="followupReply.length < 10 || isLiveRunning" class="px-6 py-2 bg-zinc-100 text-zinc-900 rounded-full font-display font-bold text-sm hover:bg-white transition disabled:opacity-30">
+            <span x-show="!isLiveRunning" x-text="currentCase?.is_followup ? '补完信息再问 →' : '基于上面再问 →'"></span>
+            <span x-show="isLiveRunning">辩论中...</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div x-show="!currentCase?.listen_mode && currentCase?.debate" x-data="{open:false}" class="mb-16">
+      <button @click="open=!open" class="w-full flex items-center justify-between border border-zinc-800 rounded-xl px-6 py-4 hover:border-zinc-600 transition">
+        <span class="font-display font-bold">二轮对辩 · 12 条交锋（点击展开）</span>
+        <span class="font-mono text-xs text-zinc-500" x-text="open ? '收起 ↑' : '展开 ↓'"></span>
+      </button>
+      <div x-show="open" x-transition class="mt-4 bg-zinc-900/40 border border-zinc-800 rounded-xl p-6 space-y-6">
+        <template x-for="(round, ri) in [currentCase?.debate?.round1, currentCase?.debate?.round2]" :key="ri">
+          <div>
+            <p class="font-mono text-xs uppercase tracking-widest text-zinc-500 mb-3" x-text="`第 ${['一','二'][ri]} 轮`"></p>
+            <template x-for="(row, i) in round" :key="i">
+              <div class="debate-row">
+                <div class="debate-arrow" x-text="`${row.speaker.slice(0,1)} → ${row.target.slice(0,1)}`"></div>
+                <div class="debate-bubble">
+                  <p :class="`text-${ {'曾国藩':'zeng', '苏轼':'su', '王阳明':'wang'}[row.speaker] }`" x-text="row.rebuttal"></p>
+                  <p class="reply">
+                    <span class="font-mono text-xs mr-1" x-text="`${row.target.slice(0,1)} →`"></span>
+                    <span x-text="row.reply"></span>
+                    <span x-show="row.standpoint === 'yielded'" class="standpoint-yielded">YIELDED</span>
+                    <span x-show="row.standpoint === 'held'" class="standpoint-held">HELD</span>
+                  </p>
+                </div>
+              </div>
+            </template>
+          </div>
+        </template>
+      </div>
+    </div>
+
+    <div x-show="!currentCase?.listen_mode && (currentCase?.consensus?.length || currentCase?.disagreement?.length)" class="mb-16 grid md:grid-cols-2 gap-6">
+      <div class="border border-zinc-800 rounded-xl p-6">
+        <p class="font-mono text-xs uppercase tracking-widest text-mod mb-4">Consensus · 一致点</p>
+        <ul class="space-y-3 text-zinc-300 text-sm leading-relaxed">
+          <template x-for="(c, i) in (currentCase?.consensus || [])" :key="i">
+            <li class="flex gap-3">
+              <span class="font-mono text-xs text-mod" x-text="`0${i+1}`"></span>
+              <span x-text="c"></span>
+            </li>
+          </template>
+        </ul>
+      </div>
+      <div class="border border-zinc-800 rounded-xl p-6">
+        <p class="font-mono text-xs uppercase tracking-widest text-wang mb-4">Disagreement · 真实分歧</p>
+        <div class="space-y-5">
+          <template x-for="(d, i) in (currentCase?.disagreement || [])" :key="i">
+            <div>
+              <p class="font-display font-bold text-sm mb-2 text-zinc-200" x-text="`Q${i+1}. ${d.topic}`"></p>
+              <div class="space-y-1 text-xs">
+                <p><span class="text-zeng font-bold mr-2">曾</span><span class="text-zinc-400" x-text="d.曾国藩"></span></p>
+                <p><span class="text-su font-bold mr-2">苏</span><span class="text-zinc-400" x-text="d.苏轼"></span></p>
+                <p><span class="text-wang font-bold mr-2">王</span><span class="text-zinc-400" x-text="d.王阳明"></span></p>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+
+    <div x-show="currentCase?.minimum_action?.tonight" class="mb-16">
+      <p class="font-mono text-xs uppercase tracking-widest text-zinc-500 mb-4">Tonight</p>
+      <div class="border rounded-xl overflow-hidden" style="border-color: rgba(212,168,90,0.3);">
+        <div class="p-6" style="background: rgba(212,168,90,0.05);">
+          <p class="font-mono text-xs uppercase tracking-widest text-mod mb-2">今晚做这件事</p>
+          <p class="text-zinc-100 leading-relaxed font-display" x-text="currentCase?.minimum_action?.tonight"></p>
+        </div>
+      </div>
+    </div>
+
+    <div x-show="currentCase?.closing_question" class="closing-block">
+      <p class="closing-question" x-text="`「${currentCase?.closing_question}」`"></p>
+      <p class="closing-attrib" x-text="`—— ${currentCase?.closing_persona}`"></p>
+    </div>
+
+    <div class="text-center mt-16 space-y-4">
+      <div>
+        <button @click="goto('debate')" class="font-mono text-[10px] uppercase tracking-widest text-zinc-600 hover:text-mod transition">↻ 观看完整辩论过程（流式 · 进阶）</button>
+      </div>
+      <div class="flex items-center justify-center gap-2 flex-wrap">
+        <button @click="goto('hero')" class="font-mono text-xs uppercase tracking-widest text-zinc-500 hover:text-zinc-100 border border-zinc-800 rounded-full px-6 py-3 transition">看其他案例</button>
+        <button @click="goto('input')" class="font-mono text-xs uppercase tracking-widest text-zinc-100 bg-zinc-100/10 hover:bg-zinc-100/20 border border-zinc-100/20 rounded-full px-6 py-3 transition">说说我的困境 →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="border-t border-zinc-900 mt-12 py-8 text-center">
+  <p class="font-mono text-xs text-zinc-600 tracking-widest">三贤议 · v0.1 · 三家共议 · 不予定论 · 只示照见</p>
+</footer>
+
+
+<script>
+function app() {
+  return {
+    view: 'hero',
+    PERSONAS: window.PERSONAS,
+    CASES: window.CASES,
+    currentIdx: 0,
+    currentCase: null,
+    userInput: '',
+    showDemoHint: false,
+
+    progress: -1,
+    progressLabels: ['首发 · First', '第一轮 · Round 1', '第二轮 · Round 2'],
+    activeSpeaker: '',
+    displayedOpinions: [],
+    currentOpinionIdx: -1,
+    displayedRounds: [],
+    isPlaying: false,
+    abortToken: 0,
+
+    // ============= LIVE 模式状态 =============
+    API_BASE: 'http://localhost:5001',
+    isLiveRunning: false,
+    liveError: '',
+    liveStageName: '',
+    liveStageMsg: '',
+    liveActiveSpeaker: '',
+    liveStagesCompleted: 0,
+    liveStagesTotal: 7,
+    liveElapsed: 0,
+    _liveTimerId: null,
+    _liveAbortController: null,
+    _liveBuffer: { card: null, opinions: null, r1_rebuttals: null, r1_replies: null, r2_rebuttals: null, r2_replies: null, text: null, output_type: null, intent: null, flagged: [] },
+    conversationFeed: [],
+    followupReply: '',
+
+    init() {
+      setTimeout(() => {
+        document.querySelectorAll('.reveal').forEach(el => el.classList.add('show'));
+      }, 100);
+
+      const hash = window.location.hash.slice(1);
+      if (hash && ['hero','input','debate','synthesis','live'].includes(hash)) {
+        this.view = hash;
+      }
+    },
+
+    goto(v) {
+      this.view = v;
+      window.location.hash = v;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (v === 'debate' && this.currentCase) {
+        this.$nextTick(() => this.playDebate());
+      }
+    },
+
+    submitInput() {
+      if (this.userInput.length < 20) return;
+      this.showDemoHint = true;
+    },
+
+    // ============= LIVE：真实调后端 SSE =============
+    async submitLive() {
+      if (this.isLiveRunning) return;
+      if (this.userInput.length < 20) return;
+
+      this.isLiveRunning = true;
+      this.liveError = '';
+      this.liveStageName = 'STARTING';
+      this.liveStageMsg = '正在召集三位...';
+      this.liveActiveSpeaker = '';
+      this.liveStagesCompleted = 0;
+      this.liveElapsed = 0;
+      this._liveBuffer = { card: null, opinions: null, r1_rebuttals: null, r1_replies: null, r2_rebuttals: null, r2_replies: null, text: null, output_type: null, intent: null, flagged: [] };
+      this.conversationFeed = [];
+
+      // 计时
+      const t0 = Date.now();
+      this._liveTimerId = setInterval(() => {
+        this.liveElapsed = Math.floor((Date.now() - t0) / 1000);
+      }, 1000);
+
+      // 切到 live 页
+      this.view = 'live';
+      window.location.hash = 'live';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      this._liveAbortController = new AbortController();
+
+      try {
+        const resp = await fetch(`${this.API_BASE}/api/debate`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_input: this.userInput }),
+          signal: this._liveAbortController.signal,
+        });
+
+        if (!resp.ok) {
+          throw new Error(`后端响应 ${resp.status}`);
+        }
+
+        const reader = resp.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
+
+          let idx;
+          while ((idx = buffer.indexOf('\n\n')) >= 0) {
+            const chunk = buffer.slice(0, idx);
+            buffer = buffer.slice(idx + 2);
+            for (const line of chunk.split('\n')) {
+              if (line.startsWith('data: ')) {
+                try {
+                  const evt = JSON.parse(line.slice(6));
+                  this.handleSSE(evt);
+                } catch (e) { console.warn('parse err', e, line); }
+              }
+            }
+          }
+        }
+      } catch (e) {
+        if (e.name === 'AbortError') {
+          this.liveError = '已取消';
+        } else {
+          this.liveError = `${e.message}（请确认后端运行：localhost:5001）`;
+        }
+        this.cleanupLive();
+        this.view = 'input';
+      }
+    },
+
+    handleSSE(evt) {
+      const t = evt.type;
+
+      if (t === 'stage') {
+        this.liveStageName = (evt.name || '').toUpperCase().replace(/_/g, ' ');
+        this.liveStageMsg = evt.msg || '';
+        return;
+      }
+      if (t === 'router_done') {
+        this._liveBuffer.card = evt.card;
+        this.liveStagesCompleted = 1;
+        return;
+      }
+      if (t === 'opinions_done') {
+        this._liveBuffer.opinions = evt.opinions;
+        this.liveStagesCompleted = 2;
+        for (const p of ['苏轼', '曾国藩', '王阳明']) {
+          const o = evt.opinions?.[p];
+          if (!o) continue;
+          const line = this.extractOneLine(o.stance || o.diagnosis || '');
+          if (line) this.appendMsg({ persona: p, text: line, kind: 'first' });
+        }
+        return;
+      }
+      if (t === 'r1_rebuttals_done') {
+        this._liveBuffer.r1_rebuttals = evt.rebuttals;
+        this.liveStagesCompleted = 3;
+        for (const [key, v] of Object.entries(evt.rebuttals || {})) {
+          const [speaker, target] = key.split('->');
+          const line = this.extractOneLine(v?.disagree_with || v?.counter_argument || '');
+          if (line) this.appendMsg({ persona: speaker, target, text: line, kind: 'rebuttal', kindLabel: '反驳' });
+        }
+        return;
+      }
+      if (t === 'r1_replies_done') {
+        this._liveBuffer.r1_replies = evt.replies;
+        this.liveStagesCompleted = 4;
+        for (const [target, v] of Object.entries(evt.replies || {})) {
+          const line = this.extractOneLine(v?.revised_stance || v?.acknowledgment || v?.still_holding || '');
+          const yielded = v?.standpoint === 'yielded';
+          if (line) this.appendMsg({ persona: target, text: line, kind: 'reply', kindLabel: yielded ? '让步回应' : '坚守回应' });
+        }
+        return;
+      }
+      if (t === 'r2_rebuttals_done') {
+        this._liveBuffer.r2_rebuttals = evt.rebuttals;
+        this.liveStagesCompleted = 5;
+        for (const [key, v] of Object.entries(evt.rebuttals || {})) {
+          const [speaker, target] = key.split('->');
+          const line = this.extractOneLine(v?.disagree_with || v?.counter_argument || '');
+          if (line) this.appendMsg({ persona: speaker, target, text: line, kind: 'rebuttal', kindLabel: '再驳' });
+        }
+        return;
+      }
+      if (t === 'r2_replies_done') {
+        this._liveBuffer.r2_replies = evt.replies;
+        this.liveStagesCompleted = 6;
+        for (const [target, v] of Object.entries(evt.replies || {})) {
+          const line = this.extractOneLine(v?.revised_stance || v?.acknowledgment || v?.still_holding || '');
+          const yielded = v?.standpoint === 'yielded';
+          if (line) this.appendMsg({ persona: target, text: line, kind: 'reply', kindLabel: yielded ? '再让一步' : '再守' });
+        }
+        return;
+      }
+      if (t === 'done') {
+        this._liveBuffer.text = evt.text;
+        this._liveBuffer.output_type = evt.output_type;
+        this._liveBuffer.intent = evt.intent;
+        this._liveBuffer.flagged = evt.flagged || [];
+        this.liveStagesCompleted = 7;
+        this.finalizeLive();
+        return;
+      }
+      if (t === 'error') {
+        this.liveError = evt.msg + (evt.traceback ? `\n${evt.traceback}` : '');
+        this.cleanupLive();
+        this.view = 'input';
+        return;
+      }
+    },
+
+    extractOneLine(text, maxLen = 80) {
+      if (!text) return '';
+      const s = String(text).replace(/\s+/g, ' ').trim();
+      // 取第一个完整中文句子
+      const m = s.match(/^[^。！？\n]{8,}?[。！？]/);
+      if (m) return m[0];
+      if (s.length <= maxLen) return s;
+      // 没有句号就截断到 maxLen + ...
+      return s.slice(0, maxLen) + '...';
+    },
+
+    appendMsg(msg) {
+      this.conversationFeed.push({ ...msg, t: Date.now() });
+      this.liveActiveSpeaker = msg.persona;
+      this.$nextTick(() => {
+        const feed = this.$refs.feed;
+        if (feed) feed.scrollTop = feed.scrollHeight;
+        // 同时滚到 viewport 底部
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+      });
+    },
+
+    finalizeLive() {
+      const buf = this._liveBuffer;
+      const card = buf.card || {};
+      const opinionsRaw = buf.opinions || {};
+
+      // 把 dict 形式 opinions 转成 demo case 数组形式
+      const opinionsArr = ['曾国藩', '苏轼', '王阳明'].map(p => {
+        const o = opinionsRaw[p] || {};
+        return {
+          persona: p,
+          stance: o.stance || '',
+          text: o.diagnosis || o.text || '',
+          signature: o.signature || '',
+          references: Array.isArray(o.references) ? o.references : null,
+          poem: o.poem_or_quote ? { source: o.poem_or_quote.source, text: o.poem_or_quote.text } : null,
+          mirror_question: o.mirror_question || null,
+        };
+      }).filter(op => op.text);
+
+      const isFollowup = buf.output_type === 'followup_question';
+
+      // 构建 currentCase（live 版）
+      this.currentCase = {
+        id: 'live-' + Date.now(),
+        title: isFollowup ? '三贤想再问一问' : '你的困境',
+        summary: (card.fact_reconstruction && card.fact_reconstruction.objective) || this.userInput.slice(0, 80),
+        user_input: this.userInput,
+        intent: buf.intent || card.core?.intent,
+        listen_mode: buf.intent === 'listen',
+        is_followup: isFollowup,
+        opinions: isFollowup ? [] : opinionsArr,
+        debate: null,
+        consensus: [],
+        disagreement: [],
+        minimum_action: { tonight: '', observation: '' },
+        closing_question: '',
+        closing_persona: '',
+        moderator_markdown: buf.text || '',
+      };
+
+      this.followupReply = '';
+      this.cleanupLive();
+      this.goto('synthesis');
+    },
+
+    submitFollowup() {
+      if (this.isLiveRunning || this.followupReply.trim().length < 10) return;
+
+      let augmented;
+      if (this.currentCase?.is_followup) {
+        // 路径 A：原困境 + 三贤追问 + 用户回答
+        augmented = `${this.userInput}\n\n（三贤追问后补充）\n${this.followupReply.trim()}`;
+      } else if (this.currentCase?.moderator_markdown) {
+        // 路径 B：基于上一轮辩论结果 + 新追问
+        const prevMd = this.currentCase.moderator_markdown;
+        const prevExcerpt = prevMd.length > 1500
+          ? prevMd.slice(0, 1500).replace(/[#*`]+/g, '') + '...（上轮综合内容已截断）'
+          : prevMd.replace(/[#*`]+/g, '');
+        augmented = `${this.userInput}\n\n[上一轮三贤已议过，主持人综合如下]\n${prevExcerpt}\n\n[现在我想继续追问]\n${this.followupReply.trim()}`;
+      } else {
+        // 兜底
+        augmented = this.followupReply.trim();
+      }
+
+      this.userInput = augmented;
+      this.followupReply = '';
+      this.submitLive();
+    },
+
+    cancelLive() {
+      if (this._liveAbortController) this._liveAbortController.abort();
+      this.cleanupLive();
+      this.view = 'input';
+    },
+
+    cleanupLive() {
+      this.isLiveRunning = false;
+      this.liveActiveSpeaker = '';
+      if (this._liveTimerId) {
+        clearInterval(this._liveTimerId);
+        this._liveTimerId = null;
+      }
+    },
+
+    renderMarkdown(md) {
+      if (!md) return '';
+      try { return window.marked.parse(md); } catch (e) { return md; }
+    },
+
+    loadCase(idx) {
+      this.currentIdx = idx;
+      this.currentCase = this.CASES[idx];
+      this.resetDebate();
+    },
+
+    resetDebate() {
+      this.abortToken++;
+      this.isPlaying = false;
+      this.progress = -1;
+      this.activeSpeaker = '';
+      this.displayedOpinions = [];
+      this.displayedRounds = [];
+      this.currentOpinionIdx = -1;
+    },
+
+    restartDebate() {
+      this.resetDebate();
+      this.$nextTick(() => this.playDebate());
+    },
+
+    skipToSynthesis() {
+      this.abortToken++;
+      this.goto('synthesis');
+    },
+
+    sleep(ms) {
+      return new Promise(r => setTimeout(r, ms));
+    },
+
+    async typewrite(obj, key, text, speed = 35, token) {
+      let i = 0;
+      while (i < text.length) {
+        if (token !== this.abortToken) return;
+        const step = Math.random() < 0.3 ? 2 : 1;
+        i = Math.min(text.length, i + step);
+        obj[key] = text.slice(0, i);
+        await this.sleep(speed);
+      }
+    },
+
+    async playDebate() {
+      if (this.isPlaying) return;
+      this.isPlaying = true;
+      const token = ++this.abortToken;
+      const c = this.currentCase;
+      if (!c) return;
+
+      this.progress = 0;
+
+      const ops = c.opinions.map(o => ({ ...o, _typed: '', _done: false }));
+      this.displayedOpinions = ops;
+
+      for (let i = 0; i < ops.length; i++) {
+        if (token !== this.abortToken) return;
+        this.activeSpeaker = ops[i].persona;
+        this.currentOpinionIdx = i;
+        await this.typewrite(ops[i], '_typed', ops[i].text, 28, token);
+        ops[i]._done = true;
+        this.currentOpinionIdx = -1;
+        await this.sleep(600);
+      }
+
+      if (c.listen_mode) {
+        this.progress = this.progressLabels.length - 1;
+        this.activeSpeaker = '';
+        this.isPlaying = false;
+        return;
+      }
+
+      const rounds = [c.debate.round1, c.debate.round2];
+      const displayedRounds = [];
+      this.displayedRounds = displayedRounds;
+
+      for (let ri = 0; ri < rounds.length; ri++) {
+        if (token !== this.abortToken) return;
+        this.progress = ri + 1;
+        const roundData = rounds[ri].map(r => ({
+          ...r,
+          _rebuttalTyped: '',
+          _replyTyped: '',
+          _rebuttalTyping: false,
+          _replyTyping: false,
+          _done: false,
+        }));
+        displayedRounds.push(roundData);
+
+        for (let i = 0; i < roundData.length; i++) {
+          if (token !== this.abortToken) return;
+          const row = roundData[i];
+
+          this.activeSpeaker = row.speaker;
+          row._rebuttalTyping = true;
+          await this.typewrite(row, '_rebuttalTyped', row.rebuttal, 25, token);
+          row._rebuttalTyping = false;
+          await this.sleep(400);
+
+          this.activeSpeaker = row.target;
+          row._replyTyping = true;
+          await this.typewrite(row, '_replyTyped', row.reply, 25, token);
+          row._replyTyping = false;
+          row._done = true;
+          await this.sleep(600);
+        }
+      }
+
+      this.activeSpeaker = '';
+      this.isPlaying = false;
+    },
+  }
+}
+
+window.addEventListener('hashchange', () => {
+  const hash = window.location.hash.slice(1);
+  if (hash && ['hero','input','debate','synthesis','live'].includes(hash)) {
+    const root = document.querySelector('[x-data]');
+    if (root && root._x_dataStack) root._x_dataStack[0].view = hash;
+  }
+});
+</script>
+
+</body>
+</html>
