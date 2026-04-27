@@ -1,77 +1,155 @@
-# 实施目录 · 操作指南
+# Backend 实施目录
 
-这个目录用于阶段 0（核心算法验证）的实际代码 + 测试输出。
+三贤议的后端 Python 代码 + Router/Agent prompt + M0.5 实测产物。
 
-## 你（Simon）现在需要做的事（一次性）
+详细架构见 [`../设计文档/M0.3-主持人设计.md`](../设计文档/M0.3-主持人设计.md)。
 
-### 1. 申请 API key（5 分钟）
+---
 
-**默认用 MiniMax**（成本约 Anthropic Opus 的 1/100，Router 这种提炼员任务完全够用）：
+## 快速启动
 
-- 访问：https://platform.minimaxi.com/
-- 注册/登录 → 左侧「API Key 管理」 → 创建新 Key
-- 复制 key
-- 默认模型：`MiniMax-M2.7`（最新主力）
-
-**预估阶段 0 跑 10 个用例总成本 < ¥0.5**（MiniMax 极便宜）。
-
-**备选：Anthropic**（M0.1 跑通后做最终对比时切换）：
-- https://console.anthropic.com/ → API keys → Create Key
-- 在 `.env` 里把 `LLM_PROVIDER=minimax` 改为 `LLM_PROVIDER=anthropic`
-
-### 2. 把 key 写到 .env 文件（本地操作，不要发给我）
-
-在 Mac 终端跑：
+### 1. 装依赖
 
 ```bash
-cd "/Users/TiktokShop/Documents/simon-files/1-Projects/6、自媒体-独立开发者转型/职场三人智囊团/实施"
-cp .env.example .env
-# 然后编辑 .env，把 sk-ant-api03-xxx 替换成你的真实 key
+pip install fastapi uvicorn openai anthropic pyyaml python-dotenv
 ```
 
-或者用 VSCode 打开 `.env` 文件直接改。
+### 2. 配 API Key
 
-### 3. 让我跑测试
+```bash
+cp .env.example .env
+# 然后编辑 .env，填一个 LLM provider 的 key（二选一）
+```
 
-key 配好后，告诉我"key 就绪"，我会执行：
+支持的 provider：
+
+| Provider | 申请 | 单次完整辩论成本 | 速度 |
+|---|---|---|---|
+| **MiniMax-M2.7**（默认） | https://platform.minimaxi.com/ | ¥0.06-0.10 | 3-6 分钟（推理模型） |
+| Anthropic Claude | https://console.anthropic.com/ | ~¥3-5 | 1-2 分钟 |
+| GLM 智谱 | https://bigmodel.cn/ | ¥0.05-0.08 | 1-2 分钟 |
+
+切 GLM：`.env` 设 `LLM_PROVIDER=anthropic` + `ANTHROPIC_BASE_URL=https://open.bigmodel.cn/api/anthropic` + `ANTHROPIC_MODEL=glm-4.7`。
+
+### 3. 启 backend 服务（FastAPI + SSE）
+
+```bash
+python3 server.py     # 监听 http://localhost:5001
+```
+
+### 4. 启 frontend（另开一个终端）
+
+```bash
+# 在 sanxianyi 根目录
+npx http-server ui -p 5500 --cors -s
+# 或：cd ../ui && python3 -m http.server 5500
+```
+
+打开 `http://localhost:5500` 即可。
+
+---
+
+## 跑测试
+
+### M0.1 Router 单元测试（10/10 通过）
 
 ```bash
 python3 router_test.py
 ```
 
-跑完输出到 `outputs/router_test_report.md`，我会给你审。
+产出 `outputs/router_test_report.md`。
+
+### M0.5 5 困境集成测试
+
+```bash
+python3 orchestrator_test.py
+```
+
+跑 5 个有代表性的困境用例（覆盖 crisis / followup / listen / decision），产出每个用例的完整 markdown + 汇总报告 `outputs/m05_test_report.md`。
+
+> 注意：5 困境完整跑完约 10-15 分钟（其中 2 个 decision 类各约 6 分钟，是 MiniMax 推理模型的特性）。
+
+### 单次 CLI 调试
+
+```bash
+python3 orchestrator.py "我 30 岁，互联网产品经理，月薪 25k..."
+```
+
+直接传困境文本作为参数，跑完输出到 `outputs/run_<timestamp>_cli.md`。
 
 ---
 
-## 目录结构
+## 文件结构
 
 ```
 实施/
-├── README.md                 # 本文档
-├── .env.example              # API key 模板（已生成）
-├── .env                      # 你填真实 key 后产生（gitignore）
-├── .gitignore                # 防止 .env 被提交
+├── server.py                   # FastAPI + SSE 入口（端口 5001）
+├── orchestrator.py             # 主流程编排 / CLI 入口
+├── moderator.py                # 主持人逻辑 + 4 内置 prompt（crisis/followup/synthesize/fallback）
+├── router.py                   # Router 入口（薄包装）
+├── agents.py                   # BaseAgent + 3 persona 子类（ZengGuoFan/SuShi/WangYangMing）
+├── corpus_loader.py            # 加载 ../设计文档/M0.2-*-语料.yaml + 引文打假
+├── orchestrator_test.py        # M0.5 5 困境实测
+├── router_test.py              # M0.1 Router 单元测试
+├── test_cases.yaml             # 15 个 Router 测试用例
 ├── prompts/
-│   └── router_v0.2.txt       # Router 的 system prompt
-├── test_cases.yaml           # 15 个测试用例
-├── router_test.py            # 测试脚本
-└── outputs/                  # 测试报告会生成在这里
+│   ├── router_v0.2.txt         # Router system prompt
+│   ├── zengguofan_v0.1.txt     # 曾国藩 system prompt
+│   ├── sushi_v0.1.txt          # 苏轼 system prompt
+│   └── wangyangming_v0.1.txt   # 王阳明 system prompt
+├── outputs/                    # 实测产物（M0.5 真实跑通的 4 个困境 markdown）
+├── .env.example                # 环境变量模板
+└── README.md                   # 本文档
 ```
 
-## 阶段 0 进度对应
+---
 
-| 模块 | 文件 | 状态 |
+## API Endpoints
+
+`server.py` 暴露：
+
+| Method | Path | 说明 |
 |---|---|---|
-| M0.1 Router 设计 | `../设计文档/M0.1-Router设计.md` | ✅ v0.2 已审 |
-| M0.1 Router 实施 | `prompts/router_v0.2.txt` + `router_test.py` | 🔄 待跑 |
-| M0.1 Router 测试报告 | `outputs/router_test_report.md` | ⏳ 跑完后 |
-| M0.2 三 agent 设计 | `../设计文档/M0.2-*.md` | ⏳ M0.1 通过后 |
-| M0.3 主持人设计 | `../设计文档/M0.3-*.md` | ⏳ |
-| M0.4 编排脚本 | `orchestrator.py` | ⏳ |
-| M0.5 5 困境实测 | `outputs/full_debate_*.md` | ⏳ |
+| GET | `/api/health` | 健康检查 |
+| POST | `/api/debate` | 主入口，接收 `{user_input}`，返回 SSE 流 |
 
-## 安全说明
+SSE 事件类型（9 种）：
+- `stage` — 当前 stage 名称 + 进度
+- `router_done` — Router 卡片
+- `opinions_done` — 3 人首发输出
+- `r1_rebuttals_done` / `r1_replies_done` — 第 1 轮辩论
+- `r2_rebuttals_done` / `r2_replies_done` — 第 2 轮辩论
+- `done` — 主持人最终 markdown
+- `error` — 错误信息
 
-- `.env` 永远不会被提交（已加 .gitignore）
-- 你的 API key 只存在你本地
-- 跑脚本时通过 `os.getenv()` 读取，不会在输出里打印
+---
+
+## 安全
+
+- `.env` 已加入 `.gitignore`，不会被提交
+- 代码全部用 `os.getenv()` 读取 API key，不会硬编码
+- backend 重启时 prompt 会重新加载（修改 `prompts/*.txt` 后必须 pkill + 重启 server.py）
+
+---
+
+## 改 LLM Provider
+
+`agents.py` 的 `_call_llm()` 函数封装了 minimax / anthropic 双 SDK 适配。要加新 provider（如 DeepSeek 直接 OpenAI SDK 兼容）：
+
+1. `.env` 加新 provider 的 key
+2. `agents.py` 顶部 if/elif 加分支
+3. 重启 server
+
+详见 `agents.py:24-55` 的 provider 初始化逻辑。
+
+---
+
+## 性能 / 成本参考
+
+单次完整 2 轮辩论（intent=decision）：
+- LLM 调用 = **16 次**（3 首发 + 3+3+3+3 R1/R2 反驳回应 + 1 主持人综合）
+- 总 LLM token ≈ 80-150K（含全部 stage YAML 上下文）
+- MiniMax-M2.7 实测耗时 = **3-6 分钟**（推理模型每次 25-90s）
+- 成本 ≈ ¥0.06-0.10 / 次
+
+性能瓶颈是 MiniMax 推理模型的 `<think>` 链。如要加速，切非推理模型（DeepSeek-V3 / Qwen-Plus）单次 ~1 分钟，但 prompt 兼容性需要再调试。
